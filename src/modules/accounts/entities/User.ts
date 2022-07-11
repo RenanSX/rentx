@@ -30,6 +30,9 @@ class User {
     if (!this.id) {
       this.id = uuiV4();
     }
+    if (!this.isAdmin) {
+      this.isAdmin = false;
+    }
   }
 }
 
