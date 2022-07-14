@@ -24,6 +24,11 @@ export async function ensureAuthenticated(request: Request, response: Response, 
     if (!user) {
       throw new AppError("Unauthenticated", 401);
     }
+
+    request.user =  {
+      id: userId
+    }
+
     next();
   } catch (error) {
     throw new AppError("Unauthenticated", 401);
