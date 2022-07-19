@@ -1,5 +1,5 @@
 import { IUsersRepository } from "../IUsersRepository";
-import { User } from "@modules/accounts/entities/User";
+import { User } from "@modules/accounts/infra/typeorm/entities/User";
 
 class UsersRepositoryInMemory implements IUsersRepository {
   users: User[] = [];
