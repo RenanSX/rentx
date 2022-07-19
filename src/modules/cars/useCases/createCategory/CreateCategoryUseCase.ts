@@ -1,6 +1,6 @@
-import { CategoriesRepository } from "../../repositories/implementations/CategoriesRepository";
+import { ICategoriesRepository } from "@modules/cars/repositories/ICategoriesRepository";
 import { inject, injectable } from "tsyringe";
-import { AppError } from "../../../../errors/AppError";
+import { AppError } from "@errors/AppError";
 
 interface IRequest {
     name: string,
@@ -11,7 +11,7 @@ interface IRequest {
 class CreateCategoryUseCase {
     constructor(
         @inject("CategoriesRepository")
-        private categoriesRepository: CategoriesRepository
+        private categoriesRepository: ICategoriesRepository
     ) {}
 
     async execute({name, description }: IRequest): Promise<void> {
