@@ -5,7 +5,6 @@ import { ensureAmdin } from "@shared/infra/http/middlewares/ensureAdmin";
 
 const specificationsRoutes = Router();
 
-
 const createSpecificationController = new CreateSpecificationController();
 
 specificationsRoutes.post(
