@@ -1,4 +1,3 @@
-
 import { ListAvailableCarsUseCase } from "./ListAvailableCarsUseCase";
 import { CarsRepositoryInMemory } from "@modules/cars/repositories/in-memory/CarsRepositoryInMemory";
 
