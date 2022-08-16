@@ -1,8 +1,11 @@
 import "reflect-metadata";
+import auth from "@config/auth";
 import { inject, injectable } from "tsyringe";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken"
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
+import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
+import { DayjsDateProvider } from "@shared/container/providers/DateProvider/implementations/DayjsDateProvider";
 import { AppError } from "@shared/errors/AppError";
 
 interface IRequest {
@@ -16,40 +19,64 @@ interface IResponse {
     email: string
   };
   token: string;
+  refresh_token: string
 }
 
 @injectable()
 class AuthenticateUserUseCase {
   constructor(
     @inject("UsersRepository")
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+    @inject("UsersTokensRepository")
+    private usersTokensRepository: IUsersTokensRepository,
+    @inject("DayjsDateProvider")
+    private dateProvider: DayjsDateProvider
   ) {}
 
   async execute({ email, password }: IRequest): Promise<IResponse> {
-    // usuario existe
     const user = await this.usersRepository.findByEmail(email);
+    const {
+      secret_token,
+      expires_in_token,
+      secret_refresh_token,
+      expires_in_refresh_token,
+      expires_refresh_token_days
+    } = auth;
+
     if (!user) {
       throw new AppError("Email or password incorrect!", 401);
     }
 
-    // senha incorreta
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) {
       throw new AppError("Email or password incorrect!");
     }
 
-    // Gerar jsonwebtoken
-    const token = sign({}, "68f2f8ec718fa0edc79def603b9235e492791a2f", {
+    const token = sign({}, secret_token, {
       subject: user.id,
-      expiresIn: "1d"
+      expiresIn: expires_in_token
     });
+
+    const refresh_token = sign({ email }, secret_refresh_token, {
+      subject: user.id,
+      expiresIn: expires_in_refresh_token
+    });
+
+    const refresh_token_expires_id = this.dateProvider.addDays(expires_refresh_token_days)
+
+    await this.usersTokensRepository.create({
+      expires_date: refresh_token_expires_id,
+      refresh_token,
+      user_id: user.id
+    })
 
     return {
       user: {
         name: user.name,
         email: user.email
       },
-      token
+      token,
+      refresh_token
     }
   }
 }
