@@ -2,7 +2,7 @@ import "reflect-metadata";
 import auth from "@config/auth";
 import { inject, injectable } from "tsyringe";
 import { compare } from "bcrypt";
-import { sign } from "jsonwebtoken"
+import { sign } from "jsonwebtoken";
 import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
 import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
 import { DayjsDateProvider } from "@shared/container/providers/DateProvider/implementations/DayjsDateProvider";
