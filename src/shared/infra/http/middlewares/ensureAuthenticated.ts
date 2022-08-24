@@ -39,7 +39,6 @@ export async function ensureAuthenticated(request: Request, response: Response, 
 
     next();
   } catch (error) {
-    console.log(error)
     throw new AppError("Unauthenticated", 401);
   }
 }
