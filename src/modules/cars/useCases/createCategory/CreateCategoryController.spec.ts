@@ -34,7 +34,7 @@ describe("Create Category Controller", () => {
     const response = await request(app)
     .post("/categories")
     .set({
-      Authorization: `Bearer ${reponseToken.body.token}`
+      Authorization: `Bearer ${reponseToken.body.refresh_token}`
     })
     .send({
       name: "category super test",
@@ -53,7 +53,7 @@ describe("Create Category Controller", () => {
     const response = await request(app)
     .post("/categories")
     .set({
-      Authorization: `Bearer ${reponseToken.body.token}`
+      Authorization: `Bearer ${reponseToken.body.refresh_token}`
     })
     .send({
       name: "category super test",
